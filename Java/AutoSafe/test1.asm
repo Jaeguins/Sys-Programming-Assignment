@@ -1,0 +1,4 @@
+	MOV AX,BX
+	MOV AX,DATA
+DATA DW 1
+Other DB 1
