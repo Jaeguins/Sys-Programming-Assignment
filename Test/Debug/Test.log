@@ -1,0 +1,19 @@
+﻿  소스.c
+c:\users\jsu48\source\repos\test\test\소스.c(162): warning C4244: '+=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\jsu48\source\repos\test\test\소스.c(229): warning C4477: 'printf' : 서식 문자열 '%s'에 'char *' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'int'입니다.
+c:\users\jsu48\source\repos\test\test\소스.c(229): warning C4473: 'printf': 서식 문자열에 대한 인수가 충분하게 전달되지 않았습니다.
+  c:\users\jsu48\source\repos\test\test\소스.c(229): note: 자리 표시자 및 해당 매개 변수에는 variadic 인수가 3개 필요하지만 2개가 제공되었습니다.
+  c:\users\jsu48\source\repos\test\test\소스.c(229): note: 누락된 variadic 인수 3이(가) 서식 문자열 '%d'에 필요합니다.
+c:\users\jsu48\source\repos\test\test\소스.c(230): warning C4477: 'fprintf' : 서식 문자열 '%s'에 'char *' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'int'입니다.
+c:\users\jsu48\source\repos\test\test\소스.c(230): warning C4473: 'fprintf': 서식 문자열에 대한 인수가 충분하게 전달되지 않았습니다.
+  c:\users\jsu48\source\repos\test\test\소스.c(230): note: 자리 표시자 및 해당 매개 변수에는 variadic 인수가 3개 필요하지만 2개가 제공되었습니다.
+  c:\users\jsu48\source\repos\test\test\소스.c(230): note: 누락된 variadic 인수 3이(가) 서식 문자열 '%d'에 필요합니다.
+c:\users\jsu48\source\repos\test\test\소스.c(233): warning C4477: 'printf' : 서식 문자열 '%s'에 'char *' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'int'입니다.
+c:\users\jsu48\source\repos\test\test\소스.c(233): warning C4473: 'printf': 서식 문자열에 대한 인수가 충분하게 전달되지 않았습니다.
+  c:\users\jsu48\source\repos\test\test\소스.c(233): note: 자리 표시자 및 해당 매개 변수에는 variadic 인수가 3개 필요하지만 2개가 제공되었습니다.
+  c:\users\jsu48\source\repos\test\test\소스.c(233): note: 누락된 variadic 인수 3이(가) 서식 문자열 '%d'에 필요합니다.
+c:\users\jsu48\source\repos\test\test\소스.c(234): warning C4477: 'fprintf' : 서식 문자열 '%s'에 'char *' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'int'입니다.
+c:\users\jsu48\source\repos\test\test\소스.c(234): warning C4473: 'fprintf': 서식 문자열에 대한 인수가 충분하게 전달되지 않았습니다.
+  c:\users\jsu48\source\repos\test\test\소스.c(234): note: 자리 표시자 및 해당 매개 변수에는 variadic 인수가 3개 필요하지만 2개가 제공되었습니다.
+  c:\users\jsu48\source\repos\test\test\소스.c(234): note: 누락된 variadic 인수 3이(가) 서식 문자열 '%d'에 필요합니다.
+  Test.vcxproj -> C:\Users\jsu48\source\repos\Test\Debug\Test.exe

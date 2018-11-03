@@ -1,0 +1,1 @@
+﻿#include <stdio.h> int main() {     int arrri[] = { 1,2,3 };     int *ptri = arri;     char arrc[] = { 1,2,3 };     char *ptrc = arrc;     printf("a%d", sizeof(arri));     printf("a%d", sizeof(ptri));     printf("a%d", sizeof(arrc));     printf("a%d", sizeof(ptrc));     return 0; }
