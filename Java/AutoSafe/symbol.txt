@@ -1,0 +1,2 @@
+DATA	6		1 
+Other	8		1 
