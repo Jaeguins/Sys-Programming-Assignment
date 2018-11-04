@@ -9,7 +9,7 @@ public class Assembler {
     public Symbol[] symbolTbl=new Symbol[30];
     Sentence sen=new Sentence();
     int LC;
-
+    File f=new File("ObjCode.txt");
     static String strncpy(String string1,String string2,int count){
         String ret="";
         ret+=string2.substring(0,count);
@@ -170,7 +170,8 @@ public class Assembler {
         int i, j = 0, k = 0;
         OutputStream ObjSave;
         try {
-            ObjSave = new FileOutputStream("ObjCode.txt");
+
+            ObjSave = new FileOutputStream(f,true);
             i = Add_Chk(buf);
             if (i != 0) {
                 modInstr[InstrP] = instr[i];
@@ -262,6 +263,7 @@ public class Assembler {
             in = new Scanner(new File("test1.asm"));
             asm.LC = 0;
             System.out.printf("\nPass2:\n");
+            asm.f.delete();
             while (true) {
                 if (!in.hasNext()) break;
                 buf = in.nextLine();
