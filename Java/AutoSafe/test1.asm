@@ -1,4 +1,8 @@
-	MOV AX,BX
-	MOV AX,DATA
-DATA DW 1
-Other DB 1
+     mov cx,bx
+     mov cx,data
+     mov data,cx
+     mov bx,cx
+     mov data,ax
+     mov other,al
+     data dw 1
+     other db 1

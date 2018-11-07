@@ -1,12 +1,36 @@
 import java.io.*;
+import java.util.LinkedList;
 import java.util.Scanner;
-
+class CustScanner {
+    Scanner scanner;
+    public CustScanner(File source) throws FileNotFoundException {
+        scanner=new Scanner(source);
+    }
+    public boolean hasNext(){
+        return scanner.hasNext();
+    }
+    public String next(){
+        String ret=scanner.next();
+        if(ret.length()==0)
+            return next();
+        else return ret;
+    }
+    public void close(){
+        scanner.close();
+    }
+    public String nextLine(){
+        String ret=scanner.nextLine();
+        if(ret.charAt(0)=='/'&&ret.charAt(1)=='/')
+            return nextLine();
+        else return ret;
+    }
+}
 public class Assembler {
-    static int MaxI, InstrP = 0,MaxS = 0,MAX_INS=1;
+    static int MaxI, InstrP = 0,MaxS = 0,MAX_INS=3;
     static int DataCounter=0;
     Reg[] reg=new Reg[20];
     Ins[] instr=new Ins[100],modInstr=new Ins[100];
-    public Symbol[] symbolTbl=new Symbol[30];
+    public LinkedList<Symbol> symbolTbl=new LinkedList<>();
     Sentence sen=new Sentence();
     int LC;
     File f=new File("ObjCode.txt");
@@ -27,8 +51,8 @@ public class Assembler {
         int i = 0, j = 1;
         instr[0]=new Ins();
         try {
-            Scanner regi = new Scanner(new File("reg.tbl"));
-            Scanner inst = new Scanner(new File("inst.tbl"));
+            CustScanner regi = new CustScanner(new File("reg.tbl"));
+            CustScanner inst = new CustScanner(new File("inst.tbl"));
             while (regi.hasNext()) {
                 reg[i]=new Reg();
                 reg[i].reg_name = regi.next();
@@ -49,7 +73,7 @@ public class Assembler {
             MaxI = j - 1;
             regi.close();
             inst.close();
-        }catch(IOException e){
+        }catch(Exception e){
             e.printStackTrace();
         }
     }
@@ -58,9 +82,10 @@ public class Assembler {
         String[] regist = { "AX","BX","CX","DX","AL","BL","CL","DL","AH","BH","CH","DH","0x00" };
         if (Character.isDigit(operand.charAt(0)))return 0;
         else {
-            while (i!=12) {
+            while (i!=regist.length) {
                 if (operand.equals(regist[i])) {
-                    if (i < 4)return 1;
+                    if(regist[i].charAt(0)=='a')return 4;
+                    else if (i < 4)return 1;
                     else return 2;
                 }
                 else i++;
@@ -73,7 +98,7 @@ public class Assembler {
         int k = MaxI;
         int i = 0, j = 0, l = 0, wp = 0;
         String[] op=new String[6];
-        String[] opcode = { "MOV","" };
+        String[] opcode = { "MOV","ADD","SUB","" };
         while (wp<sen.length()) {
             while (wp<sen.length()&&sen.charAt(wp) == ' ' || sen.charAt(wp) == '\t' || sen.charAt(wp) == ',')
                 wp++;
@@ -115,6 +140,8 @@ public class Assembler {
                 break;
             case 3: instr[0].dest="m";
                 break;
+            case 4: instr[0].dest="a";
+                break;
         }
         switch (Analyze(op[2])) {
             case 0: instr[0].sour="i";
@@ -126,6 +153,8 @@ public class Assembler {
                 instr[0].word_type="b";
                 break;
             case 3: instr[0].sour="m";
+                break;
+            case 4: instr[0].dest="a";
                 break;
         }
         while (!instr[k].instruct.equals(instr[0].instruct) || !instr[k].dest.equals(instr[0].dest) ||
@@ -142,17 +171,18 @@ public class Assembler {
             LC += Integer.parseInt(instr[i].ins_len);
         }
         else {
-            symbolTbl[DataCounter]=new Symbol();
+            Symbol tSymbol=new Symbol();
+            symbolTbl.add(tSymbol);
             if (sen._operator.equals("DW"))
-                symbolTbl[DataCounter].word_type = "w";
+                tSymbol.word_type = "w";
             else if (sen._operator.equals("DB"))
-                symbolTbl[DataCounter].word_type="b";
-            symbolTbl[DataCounter].symbol=sen.label;
-            symbolTbl[DataCounter].data=sen.operand[0];
-            symbolTbl[DataCounter].lc = LC;
+                tSymbol.word_type="b";
+            tSymbol.symbol=sen.label;
+            tSymbol.data=sen.operand[0];
+            tSymbol.lc = LC;
             System.out.printf("%04X: %s\n", LC, buf);
-            if (symbolTbl[DataCounter].word_type.charAt(0) == 'w')LC += 2;
-            else if (symbolTbl[DataCounter].word_type.charAt(0) == 'b')LC += 1;
+            if (tSymbol.word_type.charAt(0) == 'w')LC += 2;
+            else if (tSymbol.word_type.charAt(0) == 'b')LC += 1;
             DataCounter++;
             MaxS++;
         }
@@ -174,49 +204,56 @@ public class Assembler {
             ObjSave = new FileOutputStream(f,true);
             i = Add_Chk(buf);
             if (i != 0) {
-                modInstr[InstrP] = instr[i];
+                modInstr[InstrP] = instr[i].copy();
                 System.out.printf("%04X: %3s", LC, instr[i].ins_code);
                 ObjSave.write(String.format("%04x: %3s", LC, instr[i].ins_code).getBytes());
                 if (instr[i].dest.equals("r")) {
                     while (!reg[j].reg_name.equals(sen.operand[0]))
                         j++;
-                    strncpy(strchr(modInstr[InstrP].mod_reg, "?"), reg[j].reg_num, 3);
+                    modInstr[InstrP].mod_reg=modInstr[InstrP].mod_reg.replaceFirst("\\?\\?\\?",reg[j].reg_num);//strncpy(strchr(modInstr[InstrP].mod_reg, "?"), reg[j].reg_num, 3);
                 }
                 j = 0;
                 if (instr[i].sour.equals("r")) {
                     while (!reg[j].reg_name.equals(sen.operand[1])) j++;
-                    strncpy(strchr(modInstr[InstrP].mod_reg, "?"), reg[j].reg_num, 3);
+                    modInstr[InstrP].mod_reg=modInstr[InstrP].mod_reg.replaceFirst("\\?\\?\\?",reg[j].reg_num);//strncpy(strchr(modInstr[InstrP].mod_reg, "?"), reg[j].reg_num, 3);
                 }
                 if (instr[i].dest.equals("m") &&!instr[i].sour.equals("m")) {
                     System.out.printf(" %02X\t\t%s\n", btoi(modInstr[InstrP].mod_reg), buf);
                     ObjSave.write(String.format(" %02X\t\t%s\n", btoi(modInstr[InstrP].mod_reg), buf).getBytes());
-                } else {
-                    if (instr[i].dest.equals("m"))
-                        while (!symbolTbl[k].symbol.equals(sen.operand[0])) k++;
-                    else if (instr[i].sour.equals("m"))
-                        while (!symbolTbl[k].symbol.equals(sen.operand[1])) k++;
-                    if (symbolTbl[k].lc == (Integer.parseInt(symbolTbl[k].data))) {
-                        System.out.printf(" %02X\t%04X\t%s\n", btoi(modInstr[InstrP].mod_reg), symbolTbl[k].lc, buf);
-                        ObjSave.write(String.format(" %02X\t%04X\t%s\n", btoi(modInstr[InstrP].mod_reg), symbolTbl[k].lc, buf).getBytes());
-                    } else {
-                        System.out.printf(" %02X\t%04X R\t%s\n", btoi(modInstr[InstrP].mod_reg), symbolTbl[k].lc, buf);
-                        ObjSave.write(String.format(" %02X\t%04X R\t%s\n", btoi(modInstr[InstrP].mod_reg), symbolTbl[k].lc, buf).getBytes());
+                } else{
+                    if(k<symbolTbl.size()) {
+                        if (instr[i].dest.equals("m"))
+                            while (!symbolTbl.get(k).symbol.equals(sen.operand[0])) k++;
+                        else if (instr[i].sour.equals("m"))
+                            while (!symbolTbl.get(k).symbol.equals(sen.operand[1])) k++;
+                        Symbol tSym = symbolTbl.get(k);
+                        if (tSym.lc == (Integer.parseInt(tSym.data))) {
+                            System.out.printf(" %02X\t%04X\t%s\n", btoi(modInstr[InstrP].mod_reg), tSym.lc, buf);
+                            ObjSave.write(String.format(" %02X\t%04X\t%s\n", btoi(modInstr[InstrP].mod_reg), tSym.lc, buf).getBytes());
+                        } else {
+                            System.out.printf(" %02X\t%04X R\t%s", btoi(modInstr[InstrP].mod_reg), tSym.lc, buf);
+                            ObjSave.write(String.format(" %02X\t%04X R\t%s", btoi(modInstr[InstrP].mod_reg), tSym.lc, buf).getBytes());
+                        }
+                    }else {
+                        System.out.printf(" %02X\t\t%s\n", btoi(modInstr[InstrP].mod_reg), buf);
+                        ObjSave.write(String.format(" %02X\t\t%s\n", btoi(modInstr[InstrP].mod_reg), buf).getBytes());
                     }
                 }
                 LC += Integer.parseInt(instr[i].ins_len);
             } else {
                 k = 0;
-                while (strcmp(symbolTbl[k].symbol, sen.label)) k++;
-                if (!strcmp(symbolTbl[k].word_type, "w")) {
-                    System.out.printf("%04X:%04X\t\t%s\n", LC, Integer.parseInt(symbolTbl[k].data), buf);
-                    ObjSave.write(String.format("%04X:%04X\t\t%s\n", LC, Integer.parseInt(symbolTbl[k].data), buf).getBytes());
+                while (strcmp(symbolTbl.get(k).symbol, sen.label)) k++;
+                Symbol tSym=symbolTbl.get(k);
+                if (!strcmp(tSym.word_type, "w")) {
+                    System.out.printf("%04X:%04X\t\t%s\n", LC, Integer.parseInt(tSym.data), buf);
+                    ObjSave.write(String.format("%04X:%04X\t\t%s\n", LC, Integer.parseInt(tSym.data), buf).getBytes());
                 }
-                if (!strcmp(symbolTbl[k].word_type, "b")) {
-                    System.out.printf("%04X:%02X\t\t%s\n", LC, Integer.parseInt(symbolTbl[k].data), buf);
-                    ObjSave.write(String.format("%04X:%02X\t\t%s\n", LC, Integer.parseInt(symbolTbl[k].data), buf).getBytes());
+                if (!strcmp(tSym.word_type, "b")) {
+                    System.out.printf("%04X:%02X\t\t%s\n", LC, Integer.parseInt(tSym.data), buf);
+                    ObjSave.write(String.format("%04X:%02X\t\t%s\n", LC, Integer.parseInt(tSym.data), buf).getBytes());
                 }
-                if (symbolTbl[k].word_type.equals("w"))LC += 2;
-        else if (symbolTbl[k].word_type.equals("b"))LC += 1;
+                if (tSym.word_type.equals("w"))LC += 2;
+        else if (tSym.word_type.equals("b"))LC += 1;
             }
             InstrP++;
             ObjSave.close();
@@ -232,13 +269,14 @@ public class Assembler {
             System.out.printf("\n* symbolTbl Table *\n");
             System.out.printf("SYMBOL\tData(ADDRESS)\tRELOCATION\n");
             for (i = 0; i < MaxS; i++) {
-                if (!strcmp(symbolTbl[i].word_type, "w")) {
-                    System.out.printf("%s\t%X\t\t%d \n", symbolTbl[i].symbol, symbolTbl[i].lc, (symbolTbl[i].lc != Integer.parseInt(symbolTbl[i].data) ? 1 : 0));
-                    SymbolSave.write(String.format("%s\t%X\t\t%d \n", symbolTbl[i].symbol, symbolTbl[i].lc, (symbolTbl[i].lc != Integer.parseInt(symbolTbl[i].data) ? 1 : 0)).getBytes());
+                Symbol tSym=symbolTbl.get(i);
+                if (!strcmp(tSym.word_type, "w")) {
+                    System.out.printf("%s\t%X\t\t%d \n", tSym.symbol, tSym.lc, (tSym.lc != Integer.parseInt(tSym.data) ? 1 : 0));
+                    SymbolSave.write(String.format("%s\t%X\t\t%d \n", tSym.symbol, tSym.lc, (tSym.lc != Integer.parseInt(tSym.data) ? 1 : 0)).getBytes());
                 }
-                if (!strcmp(symbolTbl[i].word_type, "b")) {
-                    System.out.printf("%s\t%X\t\t%d \n", symbolTbl[i].symbol, symbolTbl[i].lc, (symbolTbl[i].lc != Integer.parseInt(symbolTbl[i].data) ? 1 : 0));
-                    SymbolSave.write(String.format("%s\t%X\t\t%d \n", symbolTbl[i].symbol, symbolTbl[i].lc, (symbolTbl[i].lc != Integer.parseInt(symbolTbl[i].data) ? 1 : 0)).getBytes());
+                if (!strcmp(tSym.word_type, "b")) {
+                    System.out.printf("%s\t%X\t\t%d \n", tSym.symbol, tSym.lc, (tSym.lc != Integer.parseInt(tSym.data) ? 1 : 0));
+                    SymbolSave.write(String.format("%s\t%X\t\t%d \n", tSym.symbol, tSym.lc, (tSym.lc != Integer.parseInt(tSym.data) ? 1 : 0)).getBytes());
                 }
             }
             SymbolSave.close();
@@ -249,7 +287,8 @@ public class Assembler {
     public static void main(String args[]) {
         String buf;
         try {
-            Scanner sysScanner = new Scanner(System.in), in = new Scanner(new File("test1.asm"));
+            Scanner sysScanner = new Scanner(System.in);
+            CustScanner in = new CustScanner(new File("test1.asm"));
             Assembler asm = new Assembler();
             asm.Initialize();
             System.out.printf("\nPass1:\n");
@@ -257,17 +296,17 @@ public class Assembler {
             while (true) {
                 if (!in.hasNext()) break;
                 buf = in.nextLine();
-                asm.PassI(buf);
+                asm.PassI(buf.toUpperCase());
             }
             asm.Symbol_Print();
-            in = new Scanner(new File("test1.asm"));
+            in = new CustScanner(new File("test1.asm"));
             asm.LC = 0;
             System.out.printf("\nPass2:\n");
             asm.f.delete();
             while (true) {
                 if (!in.hasNext()) break;
                 buf = in.nextLine();
-                asm.PassII(buf);
+                asm.PassII(buf.toUpperCase());
             }
         }catch(IOException e){
             e.printStackTrace();
@@ -288,6 +327,17 @@ class Ins {
     String ins_code="";
     String ins_len="";
     String mod_reg="";
+    public Ins copy(){
+        Ins i=new Ins();
+        i.instruct=instruct;
+        i.dest=dest;
+        i.sour=sour;
+        i.word_type=word_type;
+        i.ins_code=ins_code;
+        i.ins_len=ins_len;
+        i.mod_reg=mod_reg;
+        return i;
+    }
 }
 
 class Symbol {
