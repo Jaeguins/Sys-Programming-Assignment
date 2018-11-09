@@ -84,7 +84,10 @@ public class Assembler {
         else {
             while (i!=regist.length) {
                 if (operand.equals(regist[i])) {
-                    if(regist[i].charAt(0)=='a')return 4;
+                    if(regist[i].charAt(0)=='A'){
+                        if(regist[i].charAt(1)=='X')return 5;
+                        else return 4;
+                    }
                     else if (i < 4)return 1;
                     else return 2;
                 }
@@ -141,6 +144,10 @@ public class Assembler {
             case 3: instr[0].dest="m";
                 break;
             case 4: instr[0].dest="a";
+                instr[0].word_type="b";
+                break;
+            case 5:instr[0].dest="a";
+                instr[0].word_type="w";
                 break;
         }
         switch (Analyze(op[2])) {
@@ -154,7 +161,11 @@ public class Assembler {
                 break;
             case 3: instr[0].sour="m";
                 break;
-            case 4: instr[0].dest="a";
+            case 4: instr[0].sour="a";
+                instr[0].word_type="b";
+                break;
+            case 5:instr[0].sour="a";
+                instr[0].word_type="w";
                 break;
         }
         while (!instr[k].instruct.equals(instr[0].instruct) || !instr[k].dest.equals(instr[0].dest) ||
@@ -207,36 +218,44 @@ public class Assembler {
                 modInstr[InstrP] = instr[i].copy();
                 System.out.printf("%04X: %3s", LC, instr[i].ins_code);
                 ObjSave.write(String.format("%04x: %3s", LC, instr[i].ins_code).getBytes());
-                if (instr[i].dest.equals("r")) {
+                if (instr[i].dest.equals("a")||instr[i].dest.equals("r")) {
                     while (!reg[j].reg_name.equals(sen.operand[0]))
                         j++;
-                    modInstr[InstrP].mod_reg=modInstr[InstrP].mod_reg.replaceFirst("\\?\\?\\?",reg[j].reg_num);//strncpy(strchr(modInstr[InstrP].mod_reg, "?"), reg[j].reg_num, 3);
+                    modInstr[InstrP].mod_reg=modInstr[InstrP].mod_reg.replaceFirst("\\?\\?\\?",reg[j].reg_num);
                 }
                 j = 0;
-                if (instr[i].sour.equals("r")) {
+                if (instr[i].sour.equals("a")||instr[i].sour.equals("r")) {
                     while (!reg[j].reg_name.equals(sen.operand[1])) j++;
-                    modInstr[InstrP].mod_reg=modInstr[InstrP].mod_reg.replaceFirst("\\?\\?\\?",reg[j].reg_num);//strncpy(strchr(modInstr[InstrP].mod_reg, "?"), reg[j].reg_num, 3);
+                    modInstr[InstrP].mod_reg=modInstr[InstrP].mod_reg.replaceFirst("\\?\\?\\?",reg[j].reg_num);
                 }
-                if (instr[i].dest.equals("m") &&!instr[i].sour.equals("m")) {
-                    System.out.printf(" %02X\t\t%s\n", btoi(modInstr[InstrP].mod_reg), buf);
-                    ObjSave.write(String.format(" %02X\t\t%s\n", btoi(modInstr[InstrP].mod_reg), buf).getBytes());
+
+                if(!instr[i].dest.equals("m") &&!instr[i].sour.equals("m")) {
+                    System.out.printf(" %02X\t\t\t%s\n", btoi(modInstr[InstrP].mod_reg), buf);
+                    ObjSave.write(String.format(" %02X\t\t\t%s\n", btoi(modInstr[InstrP].mod_reg), buf).getBytes());
                 } else{
                     if(k<symbolTbl.size()) {
-                        if (instr[i].dest.equals("m"))
-                            while (!symbolTbl.get(k).symbol.equals(sen.operand[0])) k++;
-                        else if (instr[i].sour.equals("m"))
-                            while (!symbolTbl.get(k).symbol.equals(sen.operand[1])) k++;
-                        Symbol tSym = symbolTbl.get(k);
-                        if (tSym.lc == (Integer.parseInt(tSym.data))) {
-                            System.out.printf(" %02X\t%04X\t%s\n", btoi(modInstr[InstrP].mod_reg), tSym.lc, buf);
-                            ObjSave.write(String.format(" %02X\t%04X\t%s\n", btoi(modInstr[InstrP].mod_reg), tSym.lc, buf).getBytes());
-                        } else {
-                            System.out.printf(" %02X\t%04X R\t%s", btoi(modInstr[InstrP].mod_reg), tSym.lc, buf);
-                            ObjSave.write(String.format(" %02X\t%04X R\t%s", btoi(modInstr[InstrP].mod_reg), tSym.lc, buf).getBytes());
+                        if (instr[i].ins_code.charAt(0)!='A'){
+                            System.out.printf(" %02X",btoi(modInstr[InstrP].mod_reg));
+                            ObjSave.write(String.format(" %02X",btoi(modInstr[InstrP].mod_reg)).getBytes());
                         }
-                    }else {
-                        System.out.printf(" %02X\t\t%s\n", btoi(modInstr[InstrP].mod_reg), buf);
-                        ObjSave.write(String.format(" %02X\t\t%s\n", btoi(modInstr[InstrP].mod_reg), buf).getBytes());
+                        if (instr[i].dest.equals("m") || instr[i].sour.equals("m")) {
+                            if (instr[i].dest.equals("m"))
+                                while (!symbolTbl.get(k).symbol.equals(sen.operand[0])) k++;
+                            else if (instr[i].sour.equals("m"))
+                                while (!symbolTbl.get(k).symbol.equals(sen.operand[1])) k++;
+                            Symbol tSym = symbolTbl.get(k);
+                            if (tSym.lc == (Integer.parseInt(tSym.data))) {
+                                System.out.printf(" %02X %02X\t\t%s\n", tSym.lc%0x100,tSym.lc/0x100, buf);
+                                ObjSave.write(String.format(" %02X %02X\t\t%s\n", tSym.lc%0x100,tSym.lc/0x100, buf).getBytes());
+                            } else {
+                                System.out.printf(" %02X %02X R\t\t%s\n",  tSym.lc%0x100,tSym.lc/0x100, buf);
+                                ObjSave.write(String.format(" %02X %02X R\t\t%s\n", tSym.lc%0x100,tSym.lc/0x100, buf).getBytes());
+                            }
+                        }
+                        else {
+                            System.out.printf(" %02X\t\t\t%s\n", btoi(modInstr[InstrP].mod_reg), buf);
+                            ObjSave.write(String.format(" %02X\t\t\t%s\n", btoi(modInstr[InstrP].mod_reg), buf).getBytes());
+                        }
                     }
                 }
                 LC += Integer.parseInt(instr[i].ins_len);

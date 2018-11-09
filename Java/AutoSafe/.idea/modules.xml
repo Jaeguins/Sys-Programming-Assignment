@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AutoSafe.iml" filepath="$PROJECT_DIR$/AutoSafe.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PortableAssembler.iml" filepath="$PROJECT_DIR$/PortableAssembler.iml" />
     </modules>
   </component>
 </project>

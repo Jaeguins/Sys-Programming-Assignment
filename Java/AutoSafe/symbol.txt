@@ -1,2 +1,2 @@
-DATA	14		1 
-OTHER	16		1 
+DATA	80		1 
+OTHER	82		1 
