@@ -1,4 +1,0 @@
-	MOV AX,BX
-	MOV AX,DATA
-DATA DW 1
-Other db 1
