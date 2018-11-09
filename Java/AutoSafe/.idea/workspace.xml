@@ -5,22 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7203b5d7-aaa4-438c-815b-de04b290dd2d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoSafe.iml" beforeDir="false" afterPath="$PROJECT_DIR$/PortableAssembler.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ObjCode.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ObjCode.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inst.tbl" beforeDir="false" afterPath="$PROJECT_DIR$/inst.tbl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AutoSafe/Assembler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AutoSafe/CustScanner.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AutoSafe/Ins.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AutoSafe/Reg.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AutoSafe/Sentence.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AutoSafe/Symbol.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AutoSafe/backup.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Assembler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Assembler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backup.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/symbol.txt" beforeDir="false" afterPath="$PROJECT_DIR$/symbol.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test1.asm" beforeDir="false" afterPath="$PROJECT_DIR$/test1.asm" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -133,7 +118,7 @@
             <entry file="file://$PROJECT_DIR$/reg.tbl">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="209">
-                  <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
+                  <caret line="11" column="6" lean-forward="true" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
                 </state>
               </provider>
             </entry>
@@ -163,8 +148,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/Assembler.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="254">
-                  <caret line="225" column="22" selection-start-line="225" selection-end-line="226" />
+                <state relative-caret-position="178">
+                  <caret line="245" column="55" selection-start-line="245" selection-start-column="55" selection-end-line="245" selection-end-column="55" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -244,9 +229,9 @@
         <option value="$PROJECT_DIR$/reg.tbl" />
         <option value="$PROJECT_DIR$/symbol.txt" />
         <option value="$PROJECT_DIR$/ObjCode.txt" />
-        <option value="$PROJECT_DIR$/src/Assembler.java" />
         <option value="$PROJECT_DIR$/test1.asm" />
         <option value="$PROJECT_DIR$/inst.tbl" />
+        <option value="$PROJECT_DIR$/src/Assembler.java" />
       </list>
     </option>
   </component>
@@ -303,7 +288,7 @@
   <component name="PropertiesComponent">
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1541227969806" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
   </component>
@@ -334,14 +319,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Unnamed" type="Application" factoryName="Application">
-      <option name="ALTERNATIVE_JRE_PATH" value="No" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <module name="PortableAssembler" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="9" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -349,9 +326,16 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Unnamed" type="JarApplication" factoryName="JAR Application">
+      <option name="WORKING_DIRECTORY" value="C:\Users\jsu48\IdeaProjects\Sys-Programming-Assignment\Java\AutoSafe" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="9" />
+      <module name="PortableAssembler" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Application.AutoSafe" />
-      <item itemvalue="Application.Unnamed" />
+      <item itemvalue="JAR Application.Unnamed" />
     </list>
   </component>
   <component name="SvnConfiguration">
@@ -569,14 +553,14 @@
     <entry file="file://$PROJECT_DIR$/reg.tbl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="209">
-          <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
+          <caret line="11" column="6" lean-forward="true" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Assembler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="254">
-          <caret line="225" column="22" selection-start-line="225" selection-end-line="226" />
+        <state relative-caret-position="178">
+          <caret line="245" column="55" selection-start-line="245" selection-start-column="55" selection-end-line="245" selection-end-column="55" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
